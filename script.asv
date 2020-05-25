@@ -31,10 +31,6 @@ end
 % x  y  0
 % z  0  0
 
-% K is a symbol as we have to compute its range
-K = sym('K');
-
-% using algo for RH table
 x = (b*c-a*d)/b;
 y = (e+K);
 z = (x*d-y*b)/x;
