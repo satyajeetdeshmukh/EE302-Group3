@@ -5,7 +5,7 @@ clear ; close all; clc
 kvector = input('Enter value of [k1 k2 k3 k4] = ');
 
 % The root polynomial looks like as
-% $as^{4} + bs^{3} cs^{2} + ds^{1} + e + K = 0$
+% a*s^4 + b*s^3 c*s^2 + d*s^1 + e + K = 0
 
 % Now we will commpute values of these coeff
 
@@ -14,6 +14,7 @@ b=0;
 c=0;
 d=0;
 e=1;
+
 for i = 1:4
     b = b + kvector(i);
     e = e*kvector(i);
@@ -36,14 +37,20 @@ K = sym('K');
 
 % we need to ensure b is not zero else throw an error
 if(b==0)
-    error('sum of roots is zero');
+    error('b is zero');
 end
     
-% using algo for RH table
+% using algo for RH table for row 3
 x = (b*c-a*d)/b;
 y = (e+K);
-z = (x*d-y*b)/x;
 
+
+% using algo for RH table for row 4
+if(x==0)
+    error('x is zero');
+else 
+    z = (x*d-y*b)/x;
+end
 
 % column 1 of the RH table
 col1 = [a b x z];
@@ -57,8 +64,10 @@ unstable = 0;
 if (sign(col_pro(1)) == -1 || sign(col_pro(2)) == -1)
     unstable = 1;
     disp('System is unstable independent of K')
+elseif (z==0)
+    disp('System is marginally stable independent of K')
 else
-    disp('Needs further analysis with K')
+    disp('System stability depends on K')
 end
 
 % Now we have made sure that that the system's stability depends on K
@@ -77,10 +86,10 @@ disp(String)
 % Lets check for K > Kroot
 K = Kroot + 1;
 if (sign(col_pro(3)) == -1 && unstable == 0)
-    String = ['System  is unstable for K>', num2str(Kroot)];
+    String = ['System  is unstable for K > ', num2str(Kroot)];
     disp(String)
 else
-    String = ['System  is stable for K>', num2str(Kroot)];
+    String = ['System  is stable for K > ', num2str(Kroot)];
     disp(String)
 end
 
