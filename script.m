@@ -40,6 +40,25 @@ y = (e+K);
 z = (x*d-y*b)/x;
 
 
+% column 1 of the RH table
+% col1 = [a b x z];
+
+% column products vector
+col_pro = [a*b b*x x*z];
+
+% only 3rd product depends upon K. We can check if we got a unstable pole
+% from the first 2
+unstable = 0;
+if (sign(col_pro(1)) == -1 || sign(col_pro(2)) == -1)
+    unstable = 1;
+    disp('System is unstable')
+else
+    disp('Needs further analysis with K')
+end
+
+
+
+
 
 
 
