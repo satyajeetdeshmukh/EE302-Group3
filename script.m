@@ -86,10 +86,10 @@ disp(String)
 % Lets check for K > Kroot
 K = Kroot + 1;
 if (sign(col_pro(3)) == -1 && unstable == 0)
-    String = ['System  is unstable for K > ', num2str(Kroot)];
+    String = ['System  is unstable for K > ', num2str(Kroot), ' and stable for K < ', num2str(Kroot)];
     disp(String)
 else
-    String = ['System  is stable for K > ', num2str(Kroot)];
+    String = ['System  is stable for K > ', num2str(Kroot), ' and unstable for K < ', num2str(Kroot)];
     disp(String)
 end
 
