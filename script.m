@@ -34,6 +34,11 @@ end
 % K is a symbol as we have to compute its range
 K = sym('K');
 
+% we need to ensure b is not zero else throw an error
+if(b==0)
+    error('sum of roots is zero');
+end
+    
 % using algo for RH table
 x = (b*c-a*d)/b;
 y = (e+K);
@@ -41,22 +46,46 @@ z = (x*d-y*b)/x;
 
 
 % column 1 of the RH table
-% col1 = [a b x z];
+col1 = [a b x z];
 
 % column products vector
 col_pro = [a*b b*x x*z];
 
-% only 3rd product depends upon K. We can check if we got a unstable pole
-% from the first 2
+% The first 3 elements in the col are independent of K, lets see if the
+% system is unstable independent of K
 unstable = 0;
 if (sign(col_pro(1)) == -1 || sign(col_pro(2)) == -1)
     unstable = 1;
-    disp('System is unstable')
+    disp('System is unstable independent of K')
 else
     disp('Needs further analysis with K')
 end
 
+% Now we have made sure that that the system's stability depends on K
+% To achieve stability col_pro(3) must be the same sign as the other 2
+% This  will give us a constraint on K
 
+Kroot = double(solve(col_pro(3), K));
+
+% Due to nature of the problem the equation is linear and we get 3 cases.
+% K=Kroot, K > Kroot, and K < Kroot
+
+% if K=Kroot the system is marginally stable
+String = ['System  is marginally stable for K=', num2str(Kroot)];
+disp(String)
+
+% Lets check for K > Kroot
+K = Kroot + 1;
+if (sign(col_pro(3)) == -1 && unstable == 0)
+    String = ['System  is unstable for K>', num2str(Kroot)];
+    disp(String)
+else
+    String = ['System  is stable for K>', num2str(Kroot)];
+    disp(String)
+end
+
+
+    
 
 
 
