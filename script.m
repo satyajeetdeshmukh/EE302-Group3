@@ -33,6 +33,7 @@ end
 % b  d  0
 % x  y  0
 % z  0  0
+% w  0  0
 
 % K is a symbol as we have to compute its range
 K = sym('K');
@@ -54,11 +55,18 @@ else
     z = (x*d-y*b)/x;
 end
 
+% using algo for RH table for row 5
+if(z==0)
+    error('z is zero');
+else 
+    w = y;
+end
+
 % column 1 of the RH table
-col1 = [a b x z];
+col1 = [a b x z w];
 
 % column products vector
-col_pro = [a*b b*x x*z];
+col_pro = [a*b b*x x*z z*w];
 
 % The first 3 elements in the col are independent of K, lets see if the
 % system is unstable independent of K
