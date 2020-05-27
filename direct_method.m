@@ -27,7 +27,10 @@ for i = 1:4
 end
 
 K = sym('K');
+assume(K,{'real','positive'});
 s = sym('s');
-eqn = a*s^4 + b*s^3 + c*s^2 + d*s^1 + e + K;
+eqn = a*s^4 + b*s^3 + c*s^2 + d*s + e+K;
 
-S = solve(eqn,s,'Real',true);
+S = solve(eqn,s);
+
+
