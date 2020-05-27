@@ -32,5 +32,7 @@ s = sym('s');
 eqn = a*s^4 + b*s^3 + c*s^2 + d*s + e+K;
 
 S = solve(eqn,s);
+S_real = real(S);
+Stable_Cond = S_real < 0;
 
 
