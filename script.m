@@ -1,3 +1,5 @@
+% Uses Routh Hurwitz method to evaluate the range of the unkown variable
+% for a stable, unstable and marginally stable system.
 % Initialize
 clear ; close all; clc
 
