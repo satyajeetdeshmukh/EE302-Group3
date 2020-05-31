@@ -53,20 +53,20 @@ e=0;
 
 % set flags to 1 if elements in row 2 are zero
 if(b==0)
-    flag_b=1;
+    flag_b_zero=1;
 else
-    flag_b=0;
+    flag_b_zero=0;
 end
 
 if(d==0)
-    flag_d=1;
+    flag_d_zero=1;
 else
-    flag_d=0;
+    flag_d_zero=0;
 end
 
 
 % The first element of any row of the Routh array is zero.
-if(flag_b==1 && flag_d==0)
+if(flag_b_zero==1 && flag_d_zero==0)
     syms b
     assume(b,{'real', 'positive'})
     flag_take_limit_b = 1;
@@ -75,7 +75,7 @@ else
 end
     
 % All the elements of second row of the Routh array are zero.
-if(flag_b==1 && flag_d==1)
+if(flag_b_zero==1 && flag_d_zero==1)
     % Auxiliary equation: a*s^4 + c*s^2 + e + K
     % diff: 4*a*s^3 + 2*c*s
     flag_row2_zero = 1;
@@ -93,13 +93,13 @@ y = (e+K);
 
 % set flags to 1 if elements in row 3 are zero
 if(x==0)
-    flag_x=1;
+    flag_x_zero=1;
 else
-    flag_x=0;
+    flag_x_zero=0;
 end
 
 % The first element of row 3 of the Routh array is zero.
-if(flag_x==1)
+if(flag_x_zero==1)
     syms x
     assume(x,{'real', 'positive'})
     flag_take_limit_x = 1;
