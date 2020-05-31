@@ -1,0 +1,469 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>script</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-05-31"><meta name="DC.source" content="script.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">ROW 2</a></li><li><a href="#3">ROW 3</a></li><li><a href="#4">ROW 4</a></li><li><a href="#5">ROW 5</a></li><li><a href="#6">Apply limits</a></li><li><a href="#7">Check if system is unstable independent of K</a></li><li><a href="#8">Values of K for marginally stable system</a></li><li><a href="#9">Find conditions on K for system to be stable.</a></li></ul></div><pre class="codeinput"><span class="comment">% Uses Routh Hurwitz method to evaluate the range of the unkown variable</span>
+<span class="comment">% for a stable, unstable and marginally stable system.</span>
+<span class="comment">% Initialize</span>
+clear; close <span class="string">all</span>; clc
+
+<span class="comment">% % Take in k1, k2, k3, k4</span>
+<span class="comment">% kvector = input('Enter value of [k1 k2 k3 k4] = ');</span>
+<span class="comment">%</span>
+<span class="comment">% % The root polynomial looks like as</span>
+<span class="comment">% % a*s^4 + b*s^3 c*s^2 + d*s^1 + e + K = 0</span>
+<span class="comment">%</span>
+<span class="comment">% % Now we will commpute values of these coeff</span>
+<span class="comment">%</span>
+<span class="comment">% a=1;</span>
+<span class="comment">% b=0;</span>
+<span class="comment">% c=0;</span>
+<span class="comment">% d=0;</span>
+<span class="comment">% e=1;</span>
+<span class="comment">%</span>
+<span class="comment">% for i = 1:4</span>
+<span class="comment">%     b = b + kvector(i);</span>
+<span class="comment">%     e = e*kvector(i);</span>
+<span class="comment">%     for j = i+1:4</span>
+<span class="comment">%         c = c + kvector(i)*kvector(j);</span>
+<span class="comment">%         for k = j+1:4</span>
+<span class="comment">%             d = d + kvector(i)*kvector(j)*kvector(k);</span>
+<span class="comment">%         end</span>
+<span class="comment">%     end</span>
+<span class="comment">% end</span>
+
+<span class="comment">% Now we will compute the RH table</span>
+<span class="comment">% 1) a  c  e+K</span>
+<span class="comment">% 2) b  d  0</span>
+<span class="comment">% 3) x  y  0</span>
+<span class="comment">% 4) z  0  0</span>
+<span class="comment">% 5) w  0  0</span>
+
+a=1;
+b=0;
+c=1;
+d=0;
+e=0;
+
+<span class="comment">% K is a symbol as we have to compute its range</span>
+syms <span class="string">K</span>
+assume(K,{<span class="string">'real'</span>, <span class="string">'positive'</span>})
+</pre><h2 id="2">ROW 2</h2><pre class="codeinput"><span class="comment">% set flags to 1 if elements in row 2 are zero</span>
+<span class="keyword">if</span>(b==0)
+    flag_b=1;
+<span class="keyword">else</span>
+    flag_b=0;
+<span class="keyword">end</span>
+
+<span class="keyword">if</span>(d==0)
+    flag_d=1;
+<span class="keyword">else</span>
+    flag_d=0;
+<span class="keyword">end</span>
+
+
+<span class="comment">% The first element of any row of the Routh array is zero.</span>
+<span class="keyword">if</span>(flag_b==1 &amp;&amp; flag_d==0)
+    syms <span class="string">b</span>
+    assume(b,{<span class="string">'real'</span>, <span class="string">'positive'</span>})
+    flag_take_limit_b = 1;
+<span class="keyword">else</span>
+    flag_take_limit_b = 0;
+<span class="keyword">end</span>
+
+<span class="comment">% All the elements of second row of the Routh array are zero.</span>
+<span class="keyword">if</span>(flag_b==1 &amp;&amp; flag_d==1)
+    <span class="comment">% Auxiliary equation: a*s^4 + c*s^2 + e + K</span>
+    <span class="comment">% diff: 4*a*s^3 + 2*c*s</span>
+    flag_row2_zero = 1;
+    b = 4*a;
+    d = 2*c;
+<span class="keyword">else</span>
+    flag_row2_zero = 0;
+<span class="keyword">end</span>
+</pre><h2 id="3">ROW 3</h2><pre class="codeinput"><span class="comment">% using algo for RH table for row 3</span>
+x = (b*c-a*d)/b;
+y = (e+K);
+
+<span class="comment">% set flags to 1 if elements in row 3 are zero</span>
+<span class="keyword">if</span>(x==0)
+    flag_x=1;
+<span class="keyword">else</span>
+    flag_x=0;
+<span class="keyword">end</span>
+
+<span class="comment">% The first element of row 3 of the Routh array is zero.</span>
+<span class="keyword">if</span>(flag_x==1)
+    syms <span class="string">x</span>
+    assume(x,{<span class="string">'real'</span>, <span class="string">'positive'</span>})
+    flag_take_limit_x = 1;
+<span class="keyword">else</span>
+    flag_take_limit_x = 0;
+<span class="keyword">end</span>
+</pre><h2 id="4">ROW 4</h2><pre class="codeinput"><span class="comment">% Computing row 4</span>
+z = (x*d-y*b)/x;
+
+<span class="keyword">if</span>(z==0)
+    flag_z=1;
+<span class="keyword">else</span>
+    flag_z=0;
+<span class="keyword">end</span>
+
+<span class="comment">% All the elements of 4th row of the Routh array are zero.</span>
+<span class="keyword">if</span>(flag_z==1)
+    <span class="comment">% Auxiliary equation: x*s^2 + y</span>
+    <span class="comment">% diff: x*s</span>
+    z=x;
+    flag_row4_zero = 1;
+<span class="keyword">else</span>
+    flag_row4_zero = 0;
+<span class="keyword">end</span>
+</pre><h2 id="5">ROW 5</h2><pre class="codeinput">w = y;
+</pre><h2 id="6">Apply limits</h2><pre class="codeinput"><span class="comment">% column 1 of the RH table</span>
+col1 = [a b x z w];
+
+<span class="keyword">if</span>(flag_take_limit_b == 1)
+    col1 = limit(col1,b,0,<span class="string">'right'</span>);
+<span class="keyword">end</span>
+
+<span class="keyword">if</span>(flag_take_limit_x == 1)
+    col1 = limit(col1,x,0,<span class="string">'right'</span>);
+<span class="keyword">end</span>
+</pre><h2 id="7">Check if system is unstable independent of K</h2><pre class="codeinput"><span class="comment">% The first 3 elements in the col are independent of K, lets see if the</span>
+<span class="comment">% system is unstable independent of K</span>
+unstable_independent = 0;
+<span class="keyword">if</span> (sign(col1(1))*sign(col1(2))==-1 || sign(col1(2))*sign(col1(3))==-1)
+    unstable_independent = 1;
+    disp(<span class="string">'System is unstable independent of K'</span>)
+<span class="keyword">end</span>
+</pre><h2 id="8">Values of K for marginally stable system</h2><pre class="codeinput"><span class="keyword">if</span> (unstable_independent == 0)
+
+    <span class="comment">% ROW 2 ZERO</span>
+    <span class="keyword">if</span> (flag_row2_zero==1)
+        <span class="comment">% equation is a even polynomial</span>
+        <span class="comment">% for system to be marginally stable no sign change should happen</span>
+        disp(col1)
+        eqns = [sign(col1(1)) == sign(col1(2)) sign(col1(2)) == sign(col1(3)) sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
+        S = solve(eqns,K,<span class="string">'ReturnConditions'</span>,true,<span class="string">'IgnoreAnalyticConstraints'</span>,true);
+        S.K
+        S.parameters
+        disp(<span class="string">'Equation is a even polynomial and system is marginally stable for K=x :'</span>)
+        pretty(S.conditions)
+    <span class="keyword">end</span>
+
+    <span class="comment">%ROW 4 ZERO</span>
+    <span class="keyword">if</span> (flag_row4_zero==1)
+        <span class="comment">% Second order even polynomial is a factor</span>
+        <span class="comment">% for system to be marginally stable no sign change should happen</span>
+        disp(col1)
+        eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
+        S = solve(eqns,K,<span class="string">'ReturnConditions'</span>,true,<span class="string">'IgnoreAnalyticConstraints'</span>,true);
+        S.K
+        S.parameters
+        disp(<span class="string">'Second order even polynomial is a factor and System is marginally stable for K=x :'</span>)
+        pretty(S.conditions)
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">[ 1, 4, 1/2, 2 - 8*K, K]
+ 
+ 
+ans =
+ 
+y
+ 
+ 
+ans =
+ 
+y
+ 
+Equation is a even polynomial and system is marginally stable for K=x :
+              1
+0 &lt; y and y &lt; -
+              4
+
+</pre><h2 id="9">Find conditions on K for system to be stable.</h2><pre class="codeinput"><span class="keyword">if</span> (unstable_independent == 0)
+
+    <span class="keyword">if</span> (flag_row2_zero==0 &amp;&amp; flag_row4_zero==0)
+        eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
+        [K, param, cond] = solve(eqns,K,<span class="string">'ReturnConditions'</span>,true,<span class="string">'IgnoreAnalyticConstraints'</span>,true);
+        disp(<span class="string">'System is stable for K=x :'</span>)
+        pretty(cond)
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Uses Routh Hurwitz method to evaluate the range of the unkown variable
+% for a stable, unstable and marginally stable system.
+% Initialize
+clear; close all; clc
+
+% % Take in k1, k2, k3, k4
+% kvector = input('Enter value of [k1 k2 k3 k4] = ');
+% 
+% % The root polynomial looks like as
+% % a*s^4 + b*s^3 c*s^2 + d*s^1 + e + K = 0
+% 
+% % Now we will commpute values of these coeff
+% 
+% a=1;
+% b=0;
+% c=0;
+% d=0;
+% e=1;
+% 
+% for i = 1:4
+%     b = b + kvector(i);
+%     e = e*kvector(i);
+%     for j = i+1:4
+%         c = c + kvector(i)*kvector(j);
+%         for k = j+1:4
+%             d = d + kvector(i)*kvector(j)*kvector(k);
+%         end
+%     end
+% end
+
+% Now we will compute the RH table
+% 1) a  c  e+K
+% 2) b  d  0
+% 3) x  y  0
+% 4) z  0  0
+% 5) w  0  0
+
+a=1;
+b=0;
+c=1;
+d=0;
+e=0;
+
+% K is a symbol as we have to compute its range
+syms K
+assume(K,{'real', 'positive'})
+
+%% ROW 2
+
+% set flags to 1 if elements in row 2 are zero
+if(b==0)
+    flag_b=1;
+else
+    flag_b=0;
+end
+
+if(d==0)
+    flag_d=1;
+else
+    flag_d=0;
+end
+
+
+% The first element of any row of the Routh array is zero.
+if(flag_b==1 && flag_d==0)
+    syms b
+    assume(b,{'real', 'positive'})
+    flag_take_limit_b = 1;
+else
+    flag_take_limit_b = 0;
+end
+    
+% All the elements of second row of the Routh array are zero.
+if(flag_b==1 && flag_d==1)
+    % Auxiliary equation: a*s^4 + c*s^2 + e + K
+    % diff: 4*a*s^3 + 2*c*s
+    flag_row2_zero = 1;
+    b = 4*a;
+    d = 2*c;
+else
+    flag_row2_zero = 0;
+end
+
+%% ROW 3
+
+% using algo for RH table for row 3
+x = (b*c-a*d)/b;
+y = (e+K);
+
+% set flags to 1 if elements in row 3 are zero
+if(x==0)
+    flag_x=1;
+else
+    flag_x=0;
+end
+
+% The first element of row 3 of the Routh array is zero.
+if(flag_x==1)
+    syms x
+    assume(x,{'real', 'positive'})
+    flag_take_limit_x = 1;
+else
+    flag_take_limit_x = 0;
+end
+
+
+%% ROW 4
+
+% Computing row 4
+z = (x*d-y*b)/x;
+
+if(z==0)
+    flag_z=1;
+else
+    flag_z=0;
+end
+
+% All the elements of 4th row of the Routh array are zero.
+if(flag_z==1)
+    % Auxiliary equation: x*s^2 + y
+    % diff: x*s
+    z=x;
+    flag_row4_zero = 1;
+else
+    flag_row4_zero = 0;
+end
+
+%% ROW 5
+
+w = y;
+
+%% Apply limits
+
+% column 1 of the RH table
+col1 = [a b x z w];
+
+if(flag_take_limit_b == 1)
+    col1 = limit(col1,b,0,'right');
+end
+
+if(flag_take_limit_x == 1)
+    col1 = limit(col1,x,0,'right');
+end
+
+%% Check if system is unstable independent of K
+
+% The first 3 elements in the col are independent of K, lets see if the
+% system is unstable independent of K
+unstable_independent = 0;
+if (sign(col1(1))*sign(col1(2))==-1 || sign(col1(2))*sign(col1(3))==-1)
+    unstable_independent = 1;
+    disp('System is unstable independent of K')
+end
+
+%% Values of K for marginally stable system
+if (unstable_independent == 0)
+   
+    % ROW 2 ZERO
+    if (flag_row2_zero==1)
+        % equation is a even polynomial
+        % for system to be marginally stable no sign change should happen
+        disp(col1)
+        eqns = [sign(col1(1)) == sign(col1(2)) sign(col1(2)) == sign(col1(3)) sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
+        S = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
+        S.K
+        S.parameters
+        disp('Equation is a even polynomial and system is marginally stable for K=x :')
+        pretty(S.conditions)
+    end
+
+    %ROW 4 ZERO
+    if (flag_row4_zero==1)
+        % Second order even polynomial is a factor
+        % for system to be marginally stable no sign change should happen
+        disp(col1)
+        eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
+        S = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
+        S.K
+        S.parameters
+        disp('Second order even polynomial is a factor and System is marginally stable for K=x :')
+        pretty(S.conditions)
+    end
+    
+end
+
+
+%% Find conditions on K for system to be stable.
+
+if (unstable_independent == 0)
+
+    if (flag_row2_zero==0 && flag_row4_zero==0)
+        eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
+        [K, param, cond] = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
+        disp('System is stable for K=x :')
+        pretty(cond)
+    end
+
+end
+
+    
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

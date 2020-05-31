@@ -3,6 +3,8 @@
 % Initialize
 clear; close all; clc
 
+%%Take Inputs
+
 % % Take in k1, k2, k3, k4
 % kvector = input('Enter value of [k1 k2 k3 k4] = ');
 % 
@@ -37,9 +39,9 @@ clear; close all; clc
 
 a=1;
 b=0;
-c=6;
-d=4;
-e=1;
+c=1;
+d=0;
+e=0;
 
 % K is a symbol as we have to compute its range
 syms K
@@ -74,8 +76,11 @@ end
 if(flag_b==1 && flag_d==1)
     % Auxiliary equation: a*s^4 + c*s^2 + e + K
     % diff: 4*a*s^3 + 2*c*s
+    flag_row2_zero = 1;
     b = 4*a;
     d = 2*c;
+else
+    flag_row2_zero = 0;
 end
 
 %% ROW 3
@@ -91,27 +96,13 @@ else
     flag_x=0;
 end
 
-if(y==0)
-    flag_y=1;
-else
-    flag_y=0;
-end
-
 % The first element of row 3 of the Routh array is zero.
-if(flag_x==1 && flag_y==0)
+if(flag_x==1)
     syms x
     assume(x,{'real', 'positive'})
     flag_take_limit_x = 1;
 else
     flag_take_limit_x = 0;
-end
-    
-% All the elements of 3rd row of the Routh array are zero.
-if(flag_x==1 && flag_y==1)
-    % Auxiliary equation: b*s^3 + d*s
-    % diff: 3*b*s^2 + d
-    x = 3*b;
-    y = d;
 end
 
 
@@ -131,6 +122,9 @@ if(flag_z==1)
     % Auxiliary equation: x*s^2 + y
     % diff: x*s
     z=x;
+    flag_row4_zero = 1;
+else
+    flag_row4_zero = 0;
 end
 
 %% ROW 5
@@ -155,36 +149,55 @@ end
 % The first 3 elements in the col are independent of K, lets see if the
 % system is unstable independent of K
 unstable_independent = 0;
-if (sign(col1(1)) ~= sign(col1(2)) || sign(col1(2)) ~= sign(col1(3)))
+if (sign(col1(1))*sign(col1(2))==-1 || sign(col1(2))*sign(col1(3))==-1)
     unstable_independent = 1;
     disp('System is unstable independent of K')
 end
 
-%% Values of K for marginally stable
+%% Values of K for marginally stable system
+if (unstable_independent == 0)
+   
+    % ROW 2 ZERO
+    if (flag_row2_zero==1)
+        % equation is a even polynomial
+        % for system to be marginally stable no sign change should happen
+        disp(col1)
+        eqns = [sign(col1(1)) == sign(col1(2)) sign(col1(2)) == sign(col1(3)) sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
+        S = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
+        S.K
+        S.parameters
+        disp('Equation is a even polynomial and system is marginally stable for K=x :')
+        pretty(S.conditions)
+    end
 
-if (flag_take_limit_b==1)
-    % equation is a even polynomial
-    % for system to be marginally stable no sign change should happen
-    disp(col1)
-    eqns = [sign(col1(1)) == sign(col1(2)) sign(col1(2)) == sign(col1(3)) sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
-    S = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
-    S.K
-    S.parameters
-    disp('System is marginally stable for K=x :')
-    pretty(S.conditions)
+    %ROW 4 ZERO
+    if (flag_row4_zero==1)
+        % Second order even polynomial is a factor
+        % for system to be marginally stable no sign change should happen
+        disp(col1)
+        eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
+        S = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
+        S.K
+        S.parameters
+        disp('Second order even polynomial is a factor and System is marginally stable for K=x :')
+        pretty(S.conditions)
+    end
+    
 end
+
 
 %% Find conditions on K for system to be stable.
-if (flag_take_limit_b==0 && flag_take_limit_x==0)
-    eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
-    S = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
-    S.K
-    S.parameters
-    disp('System is stable for K=x :')
-    pretty(S.conditions)
+
+if (unstable_independent == 0)
+
+    if (flag_row2_zero==0 && flag_row4_zero==0)
+        eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
+        [K, param, cond] = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
+        disp('System is stable for K=x :')
+        pretty(cond)
+    end
+
 end
-
-
 
     
 
