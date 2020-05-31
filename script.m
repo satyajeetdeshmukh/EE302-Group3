@@ -29,11 +29,11 @@ clear; close all; clc
 % end
 
 % Now we will compute the RH table
-% a  c  e+K
-% b  d  0
-% x  y  0
-% z  0  0
-% w  0  0
+% 1) a  c  e+K
+% 2) b  d  0
+% 3) x  y  0
+% 4) z  0  0
+% 5) w  0  0
 
 a=1;
 b=0;
@@ -44,6 +44,8 @@ e=1;
 % K is a symbol as we have to compute its range
 syms K
 assume(K,{'real', 'positive'})
+
+%% ROW 2
 
 % set flags to 1 if elements in row 2 are zero
 if(b==0)
@@ -76,6 +78,8 @@ if(flag_b==1 && flag_d==1)
     b = 4*a;
     d = 2*c;
 end
+
+%% ROW 3
 
 % using algo for RH table for row 3
 x = (b*c-a*d)/b;
@@ -113,17 +117,29 @@ if(flag_x==1 && flag_y==1)
 end
 
 
-
+%% ROW 4
 
 % Computing row 4
 z = (x*d-y*b)/x;
 
-% using algo for RH table for row 5
 if(z==0)
-    error('z is zero');
-else 
-    w = y;
+    flag_z=1;
+else
+    flag_z=0;
 end
+
+% All the elements of 4th row of the Routh array are zero.
+if(flag_z==1)
+    % Auxiliary equation: x*s^2 + y
+    % diff: x*s
+    z=x;
+end
+
+%% ROW 5
+
+w = y;
+
+%% Find nature of the system.
 
 % column 1 of the RH table
 col1 = [a b x z w];
