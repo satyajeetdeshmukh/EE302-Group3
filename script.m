@@ -63,7 +63,7 @@ end
 if(flag_b==1 && flag_d==0)
     disp('b is zero, d is non-zero')
     syms b
-    assume(K,{'real', 'positive'})
+    assume(b,{'real', 'positive'})
     flag_take_limit_b = 1;
 else
     flag_take_limit_b = 0;
@@ -94,13 +94,29 @@ else
     flag_y=0;
 end
 
-
-% using algo for RH table for row 4
-if(x==0)
-    error('x is zero');
-else 
-    z = (x*d-y*b)/x;
+% The first element of row 3 of the Routh array is zero.
+if(flag_x==1 && flag_y==0)
+    disp('x is zero, y is non-zero')
+    syms x
+    assume(x,{'real', 'positive'})
+    flag_take_limit_x = 1;
+else
+    flag_take_limit_x = 0;
 end
+    
+% All the elements of 3rd row of the Routh array are zero.
+if(flag_x==1 && flag_y==1)
+    % Auxiliary equation: b*s^3 + d*s
+    % diff: 3*b*s^2 + d
+    x = 3*b;
+    y = d;
+end
+
+
+
+
+% Computing row 4
+z = (x*d-y*b)/x;
 
 % using algo for RH table for row 5
 if(z==0)
