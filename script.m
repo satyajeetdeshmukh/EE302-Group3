@@ -154,31 +154,24 @@ end
 
 % The first 3 elements in the col are independent of K, lets see if the
 % system is unstable independent of K
-unstable = 0;
+unstable_independent = 0;
 if (sign(col1(1)) ~= sign(col1(2)) || sign(col1(2)) ~= sign(col1(3)))
-    rhp_poles = 0;
-    for i = 1:4
-        if(sign(col1(i)) ~= sign(col1(i+1)))
-            rhp_poles = rhp_poles + 1;
-        end
-    end
+    unstable_independent = 1;
     disp('System is unstable independent of K')
-    disp('No. of right half-plane poles = ')
-    disp(rhp_poles)
 end
 
-%% Check if system is marginally stable
-if (flag_take_limit_b==0)
+%% Values of K for marginally stable
+
+if (flag_take_limit_b==1)
     % equation is a even polynomial
-    rhp_poles = 0;
-    for i = 1:4
-        if(sign(col1(i)) ~= sign(col1(i+1)))
-            rhp_poles = rhp_poles + 1;
-        end
-    end
-    
-    jw_poles = 4 - 2*rhp_poles;
-    
+    % for system to be marginally stable no sign change should happen
+    disp(col1)
+    eqns = [sign(col1(1)) == sign(col1(2)) sign(col1(2)) == sign(col1(3)) sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
+    S = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
+    S.K
+    S.parameters
+    disp('System is marginally stable for K=x :')
+    pretty(S.conditions)
 end
 
 %% Find conditions on K for system to be stable.
