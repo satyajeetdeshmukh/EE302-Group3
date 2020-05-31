@@ -45,7 +45,7 @@ e=1;
 syms K
 assume(K,{'real', 'positive'})
 
-
+% set flags to 1 if elements in row 2 are zero
 if(b==0)
     flag_b=1;
 else
@@ -80,6 +80,19 @@ end
 % using algo for RH table for row 3
 x = (b*c-a*d)/b;
 y = (e+K);
+
+% set flags to 1 if elements in row 3 are zero
+if(x==0)
+    flag_x=1;
+else
+    flag_x=0;
+end
+
+if(y==0)
+    flag_y=1;
+else
+    flag_y=0;
+end
 
 
 % using algo for RH table for row 4
