@@ -3,7 +3,11 @@
 % Initialize
 clear; close all; clc
 
-%%Take Inputs
+% K is a symbol as we have to compute its range
+syms K
+assume(K,{'real', 'positive'})
+
+%% Take Inputs
 
 % % Take in k1, k2, k3, k4
 % kvector = input('Enter value of [k1 k2 k3 k4] = ');
@@ -37,15 +41,13 @@ clear; close all; clc
 % 4) z  0  0
 % 5) w  0  0
 
+%% Debug values
 a=1;
 b=0;
 c=1;
 d=0;
 e=0;
 
-% K is a symbol as we have to compute its range
-syms K
-assume(K,{'real', 'positive'})
 
 %% ROW 2
 
