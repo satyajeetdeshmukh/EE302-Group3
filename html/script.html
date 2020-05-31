@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Debug values</a></li><li><a href="#3">ROW 2</a></li><li><a href="#4">ROW 3</a></li><li><a href="#5">ROW 4</a></li><li><a href="#6">ROW 5</a></li><li><a href="#7">Apply limits</a></li><li><a href="#8">Check if system is unstable independent of K</a></li><li><a href="#9">Values of K for marginally stable system</a></li><li><a href="#10">Find conditions on K for system to be stable.</a></li></ul></div><pre class="codeinput"><span class="comment">% Uses Routh Hurwitz method to evaluate the range of the unkown variable</span>
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Take Inputs</a></li><li><a href="#3">Debug values</a></li><li><a href="#4">ROW 2</a></li><li><a href="#5">ROW 3</a></li><li><a href="#6">ROW 4</a></li><li><a href="#7">ROW 5</a></li><li><a href="#8">Apply limits</a></li><li><a href="#9">Check if system is unstable independent of K</a></li><li><a href="#10">Values of K for marginally stable system</a></li><li><a href="#11">Find conditions on K for system to be stable.</a></li></ul></div><pre class="codeinput"><span class="comment">% Uses Routh Hurwitz method to evaluate the range of the unkown variable</span>
 <span class="comment">% for a stable, unstable and marginally stable system.</span>
 <span class="comment">% Initialize</span>
 clear; close <span class="string">all</span>; clc
@@ -74,33 +74,30 @@ clear; close <span class="string">all</span>; clc
 <span class="comment">% K is a symbol as we have to compute its range</span>
 syms <span class="string">K</span>
 assume(K,{<span class="string">'real'</span>, <span class="string">'positive'</span>})
-
-<span class="comment">%%Take Inputs</span>
-
-<span class="comment">% Take in k1, k2, k3, k4</span>
-kvector = input(<span class="string">'Enter value of [k1 k2 k3 k4] = '</span>);
-
-<span class="comment">% The root polynomial looks like as</span>
-<span class="comment">% a*s^4 + b*s^3 c*s^2 + d*s^1 + e + K = 0</span>
-
-<span class="comment">% Now we will commpute values of these coeff</span>
-
-a=1;
-b=0;
-c=0;
-d=0;
-e=1;
-
-<span class="keyword">for</span> i = 1:4
-    b = b + kvector(i);
-    e = e*kvector(i);
-    <span class="keyword">for</span> j = i+1:4
-        c = c + kvector(i)*kvector(j);
-        <span class="keyword">for</span> k = j+1:4
-            d = d + kvector(i)*kvector(j)*kvector(k);
-        <span class="keyword">end</span>
-    <span class="keyword">end</span>
-<span class="keyword">end</span>
+</pre><h2 id="2">Take Inputs</h2><pre class="codeinput"><span class="comment">% % Take in k1, k2, k3, k4</span>
+<span class="comment">% kvector = input('Enter value of [k1 k2 k3 k4] = ');</span>
+<span class="comment">%</span>
+<span class="comment">% % The root polynomial looks like as</span>
+<span class="comment">% % a*s^4 + b*s^3 c*s^2 + d*s^1 + e + K = 0</span>
+<span class="comment">%</span>
+<span class="comment">% % Now we will commpute values of these coeff</span>
+<span class="comment">%</span>
+<span class="comment">% a=1;</span>
+<span class="comment">% b=0;</span>
+<span class="comment">% c=0;</span>
+<span class="comment">% d=0;</span>
+<span class="comment">% e=1;</span>
+<span class="comment">%</span>
+<span class="comment">% for i = 1:4</span>
+<span class="comment">%     b = b + kvector(i);</span>
+<span class="comment">%     e = e*kvector(i);</span>
+<span class="comment">%     for j = i+1:4</span>
+<span class="comment">%         c = c + kvector(i)*kvector(j);</span>
+<span class="comment">%         for k = j+1:4</span>
+<span class="comment">%             d = d + kvector(i)*kvector(j)*kvector(k);</span>
+<span class="comment">%         end</span>
+<span class="comment">%     end</span>
+<span class="comment">% end</span>
 
 <span class="comment">% Now we will compute the RH table</span>
 <span class="comment">% 1) a  c  e+K</span>
@@ -108,32 +105,27 @@ e=1;
 <span class="comment">% 3) x  y  0</span>
 <span class="comment">% 4) z  0  0</span>
 <span class="comment">% 5) w  0  0</span>
-</pre><pre class="codeoutput error">Error using input
-Cannot call INPUT from EVALC.
-
-Error in script (line 13)
-kvector = input('Enter value of [k1 k2 k3 k4] = ');
-</pre><h2 id="2">Debug values</h2><pre class="codeinput">a=1;
+</pre><h2 id="3">Debug values</h2><pre class="codeinput">a=1;
 b=0;
 c=1;
 d=0;
 e=0;
-</pre><h2 id="3">ROW 2</h2><pre class="codeinput"><span class="comment">% set flags to 1 if elements in row 2 are zero</span>
+</pre><h2 id="4">ROW 2</h2><pre class="codeinput"><span class="comment">% set flags to 1 if elements in row 2 are zero</span>
 <span class="keyword">if</span>(b==0)
-    flag_b=1;
+    flag_b_zero=1;
 <span class="keyword">else</span>
-    flag_b=0;
+    flag_b_zero=0;
 <span class="keyword">end</span>
 
 <span class="keyword">if</span>(d==0)
-    flag_d=1;
+    flag_d_zero=1;
 <span class="keyword">else</span>
-    flag_d=0;
+    flag_d_zero=0;
 <span class="keyword">end</span>
 
 
 <span class="comment">% The first element of any row of the Routh array is zero.</span>
-<span class="keyword">if</span>(flag_b==1 &amp;&amp; flag_d==0)
+<span class="keyword">if</span>(flag_b_zero==1 &amp;&amp; flag_d_zero==0)
     syms <span class="string">b</span>
     assume(b,{<span class="string">'real'</span>, <span class="string">'positive'</span>})
     flag_take_limit_b = 1;
@@ -142,7 +134,7 @@ e=0;
 <span class="keyword">end</span>
 
 <span class="comment">% All the elements of second row of the Routh array are zero.</span>
-<span class="keyword">if</span>(flag_b==1 &amp;&amp; flag_d==1)
+<span class="keyword">if</span>(flag_b_zero==1 &amp;&amp; flag_d_zero==1)
     <span class="comment">% Auxiliary equation: a*s^4 + c*s^2 + e + K</span>
     <span class="comment">% diff: 4*a*s^3 + 2*c*s</span>
     flag_row2_zero = 1;
@@ -151,26 +143,26 @@ e=0;
 <span class="keyword">else</span>
     flag_row2_zero = 0;
 <span class="keyword">end</span>
-</pre><h2 id="4">ROW 3</h2><pre class="codeinput"><span class="comment">% using algo for RH table for row 3</span>
+</pre><h2 id="5">ROW 3</h2><pre class="codeinput"><span class="comment">% using algo for RH table for row 3</span>
 x = (b*c-a*d)/b;
 y = (e+K);
 
 <span class="comment">% set flags to 1 if elements in row 3 are zero</span>
 <span class="keyword">if</span>(x==0)
-    flag_x=1;
+    flag_x_zero=1;
 <span class="keyword">else</span>
-    flag_x=0;
+    flag_x_zero=0;
 <span class="keyword">end</span>
 
 <span class="comment">% The first element of row 3 of the Routh array is zero.</span>
-<span class="keyword">if</span>(flag_x==1)
+<span class="keyword">if</span>(flag_x_zero==1)
     syms <span class="string">x</span>
     assume(x,{<span class="string">'real'</span>, <span class="string">'positive'</span>})
     flag_take_limit_x = 1;
 <span class="keyword">else</span>
     flag_take_limit_x = 0;
 <span class="keyword">end</span>
-</pre><h2 id="5">ROW 4</h2><pre class="codeinput"><span class="comment">% Computing row 4</span>
+</pre><h2 id="6">ROW 4</h2><pre class="codeinput"><span class="comment">% Computing row 4</span>
 z = (x*d-y*b)/x;
 
 <span class="keyword">if</span>(z==0)
@@ -188,8 +180,8 @@ z = (x*d-y*b)/x;
 <span class="keyword">else</span>
     flag_row4_zero = 0;
 <span class="keyword">end</span>
-</pre><h2 id="6">ROW 5</h2><pre class="codeinput">w = y;
-</pre><h2 id="7">Apply limits</h2><pre class="codeinput"><span class="comment">% column 1 of the RH table</span>
+</pre><h2 id="7">ROW 5</h2><pre class="codeinput">w = y;
+</pre><h2 id="8">Apply limits</h2><pre class="codeinput"><span class="comment">% column 1 of the RH table</span>
 col1 = [a b x z w];
 
 <span class="keyword">if</span>(flag_take_limit_b == 1)
@@ -199,14 +191,14 @@ col1 = [a b x z w];
 <span class="keyword">if</span>(flag_take_limit_x == 1)
     col1 = limit(col1,x,0,<span class="string">'right'</span>);
 <span class="keyword">end</span>
-</pre><h2 id="8">Check if system is unstable independent of K</h2><pre class="codeinput"><span class="comment">% The first 3 elements in the col are independent of K, lets see if the</span>
+</pre><h2 id="9">Check if system is unstable independent of K</h2><pre class="codeinput"><span class="comment">% The first 3 elements in the col are independent of K, lets see if the</span>
 <span class="comment">% system is unstable independent of K</span>
 unstable_independent = 0;
 <span class="keyword">if</span> (sign(col1(1))*sign(col1(2))==-1 || sign(col1(2))*sign(col1(3))==-1)
     unstable_independent = 1;
     disp(<span class="string">'System is unstable independent of K'</span>)
 <span class="keyword">end</span>
-</pre><h2 id="9">Values of K for marginally stable system</h2><pre class="codeinput"><span class="keyword">if</span> (unstable_independent == 0)
+</pre><h2 id="10">Values of K for marginally stable system</h2><pre class="codeinput"><span class="keyword">if</span> (unstable_independent == 0)
 
     <span class="comment">% ROW 2 ZERO</span>
     <span class="keyword">if</span> (flag_row2_zero==1)
@@ -235,7 +227,24 @@ unstable_independent = 0;
     <span class="keyword">end</span>
 
 <span class="keyword">end</span>
-</pre><h2 id="10">Find conditions on K for system to be stable.</h2><pre class="codeinput"><span class="keyword">if</span> (unstable_independent == 0)
+</pre><pre class="codeoutput">[ 1, 4, 1/2, 2 - 8*K, K]
+ 
+ 
+ans =
+ 
+y
+ 
+ 
+ans =
+ 
+y
+ 
+Equation is a even polynomial and system is marginally stable for K=x :
+              1
+0 &lt; y and y &lt; -
+              4
+
+</pre><h2 id="11">Find conditions on K for system to be stable.</h2><pre class="codeinput"><span class="keyword">if</span> (unstable_independent == 0)
 
     <span class="keyword">if</span> (flag_row2_zero==0 &amp;&amp; flag_row4_zero==0)
         eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
@@ -256,32 +265,32 @@ clear; close all; clc
 syms K
 assume(K,{'real', 'positive'})
 
-%%Take Inputs
+%% Take Inputs
 
-% Take in k1, k2, k3, k4
-kvector = input('Enter value of [k1 k2 k3 k4] = ');
-
-% The root polynomial looks like as
-% a*s^4 + b*s^3 c*s^2 + d*s^1 + e + K = 0
-
-% Now we will commpute values of these coeff
-
-a=1;
-b=0;
-c=0;
-d=0;
-e=1;
-
-for i = 1:4
-    b = b + kvector(i);
-    e = e*kvector(i);
-    for j = i+1:4
-        c = c + kvector(i)*kvector(j);
-        for k = j+1:4
-            d = d + kvector(i)*kvector(j)*kvector(k);
-        end
-    end
-end
+% % Take in k1, k2, k3, k4
+% kvector = input('Enter value of [k1 k2 k3 k4] = ');
+% 
+% % The root polynomial looks like as
+% % a*s^4 + b*s^3 c*s^2 + d*s^1 + e + K = 0
+% 
+% % Now we will commpute values of these coeff
+% 
+% a=1;
+% b=0;
+% c=0;
+% d=0;
+% e=1;
+% 
+% for i = 1:4
+%     b = b + kvector(i);
+%     e = e*kvector(i);
+%     for j = i+1:4
+%         c = c + kvector(i)*kvector(j);
+%         for k = j+1:4
+%             d = d + kvector(i)*kvector(j)*kvector(k);
+%         end
+%     end
+% end
 
 % Now we will compute the RH table
 % 1) a  c  e+K
@@ -302,20 +311,20 @@ e=0;
 
 % set flags to 1 if elements in row 2 are zero
 if(b==0)
-    flag_b=1;
+    flag_b_zero=1;
 else
-    flag_b=0;
+    flag_b_zero=0;
 end
 
 if(d==0)
-    flag_d=1;
+    flag_d_zero=1;
 else
-    flag_d=0;
+    flag_d_zero=0;
 end
 
 
 % The first element of any row of the Routh array is zero.
-if(flag_b==1 && flag_d==0)
+if(flag_b_zero==1 && flag_d_zero==0)
     syms b
     assume(b,{'real', 'positive'})
     flag_take_limit_b = 1;
@@ -324,7 +333,7 @@ else
 end
     
 % All the elements of second row of the Routh array are zero.
-if(flag_b==1 && flag_d==1)
+if(flag_b_zero==1 && flag_d_zero==1)
     % Auxiliary equation: a*s^4 + c*s^2 + e + K
     % diff: 4*a*s^3 + 2*c*s
     flag_row2_zero = 1;
@@ -342,13 +351,13 @@ y = (e+K);
 
 % set flags to 1 if elements in row 3 are zero
 if(x==0)
-    flag_x=1;
+    flag_x_zero=1;
 else
-    flag_x=0;
+    flag_x_zero=0;
 end
 
 % The first element of row 3 of the Routh array is zero.
-if(flag_x==1)
+if(flag_x_zero==1)
     syms x
     assume(x,{'real', 'positive'})
     flag_take_limit_x = 1;
