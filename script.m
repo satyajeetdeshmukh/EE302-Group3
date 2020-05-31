@@ -68,6 +68,14 @@ else
     flag_1 = 0;
 end
     
+% All the elements of any row of the Routh array are zero.
+if(flag_b==1 && flag_d==1)
+    % Auxiliary equation: a*s^4 + c*s^2 + e + K
+    % diff: 4*a*s^3 + 2*c*s
+    b = 4*a;
+    d = 2*c;
+end
+
 % using algo for RH table for row 3
 x = (b*c-a*d)/b;
 y = (e+K);
