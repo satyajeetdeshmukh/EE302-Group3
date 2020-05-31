@@ -63,7 +63,6 @@ end
 
 % The first element of any row of the Routh array is zero.
 if(flag_b==1 && flag_d==0)
-    disp('b is zero, d is non-zero')
     syms b
     assume(b,{'real', 'positive'})
     flag_take_limit_b = 1;
@@ -100,7 +99,6 @@ end
 
 % The first element of row 3 of the Routh array is zero.
 if(flag_x==1 && flag_y==0)
-    disp('x is zero, y is non-zero')
     syms x
     assume(x,{'real', 'positive'})
     flag_take_limit_x = 1;
@@ -152,29 +150,47 @@ if(flag_take_limit_x == 1)
     col1 = limit(col1,x,0,'right');
 end
 
-%% Check if unstable
+%% Check if system is unstable independent of K
 
 % The first 3 elements in the col are independent of K, lets see if the
 % system is unstable independent of K
 unstable = 0;
 if (sign(col1(1)) ~= sign(col1(2)) || sign(col1(2)) ~= sign(col1(3)))
-    unstable_poles = 0;
+    rhp_poles = 0;
     for i = 1:4
         if(sign(col1(i)) ~= sign(col1(i+1)))
-            unstable_poles = unstable_poles + 1;
+            rhp_poles = rhp_poles + 1;
         end
     end
-     
-    error('System is unstable independent of K')
-else
+    disp('System is unstable independent of K')
+    disp('No. of right half-plane poles = ')
+    disp(rhp_poles)
+end
+
+%% Check if system is marginally stable
+if (flag_take_limit_b==0)
+    % equation is a even polynomial
+    rhp_poles = 0;
+    for i = 1:4
+        if(sign(col1(i)) ~= sign(col1(i+1)))
+            rhp_poles = rhp_poles + 1;
+        end
+    end
+    
+    jw_poles = 4 - 2*rhp_poles;
+    
+end
+
+%% Find conditions on K for system to be stable.
+if (flag_take_limit_b==0 && flag_take_limit_x==0)
     eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
     S = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
     S.K
     S.parameters
     disp('System is stable for K=x :')
     pretty(S.conditions)
-
 end
+
 
 
     
