@@ -45,9 +45,22 @@ e=1;
 syms K
 assume(K,{'real', 'positive'})
 
-% we need to ensure b is not zero else throw an error
-if(b==0 && d~=0)
-    disp('b is zero')
+if(b==0)
+    flag_b=1;
+else
+    flag_b=0;
+end
+
+if(d==0)
+    flag_d=1;
+else
+    flag_d=0;
+end
+
+
+% The first element of any row of the Routh array is zero.
+if(flag_b==1 && flag_d==0)
+    disp('b is zero, d is non-zero')
     syms b
     assume(K,{'real', 'positive'})
     flag_1 = 1;
