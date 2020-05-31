@@ -45,6 +45,7 @@ e=1;
 syms K
 assume(K,{'real', 'positive'})
 
+
 if(b==0)
     flag_b=1;
 else
@@ -63,12 +64,12 @@ if(flag_b==1 && flag_d==0)
     disp('b is zero, d is non-zero')
     syms b
     assume(K,{'real', 'positive'})
-    flag_1 = 1;
+    flag_take_limit_b = 1;
 else
-    flag_1 = 0;
+    flag_take_limit_b = 0;
 end
     
-% All the elements of any row of the Routh array are zero.
+% All the elements of second row of the Routh array are zero.
 if(flag_b==1 && flag_d==1)
     % Auxiliary equation: a*s^4 + c*s^2 + e + K
     % diff: 4*a*s^3 + 2*c*s
@@ -98,7 +99,7 @@ end
 % column 1 of the RH table
 col1 = [a b x z w];
 
-if(flag_1 == 1)
+if(flag_take_limit_b == 1)
     col1 = limit(col1,b,0,'right');
 end
 
