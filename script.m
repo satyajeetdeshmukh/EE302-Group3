@@ -139,7 +139,7 @@ end
 
 w = y;
 
-%% Find nature of the system.
+%% Apply limits
 
 % column 1 of the RH table
 col1 = [a b x z w];
@@ -147,6 +147,12 @@ col1 = [a b x z w];
 if(flag_take_limit_b == 1)
     col1 = limit(col1,b,0,'right');
 end
+
+if(flag_take_limit_x == 1)
+    col1 = limit(col1,x,0,'right');
+end
+
+%% Check if unstable
 
 % The first 3 elements in the col are independent of K, lets see if the
 % system is unstable independent of K
