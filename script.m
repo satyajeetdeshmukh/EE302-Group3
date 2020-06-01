@@ -159,8 +159,8 @@ end
 %% Values of K for marginally stable system
 if (unstable_independent == 0)
    
-    % ROW 2 ZERO
-    if (flag_row2_zero==1)
+    % ROW 2 or ROW 4 ZERO
+    if (flag_row2_zero==1 || flag_row4_zero==1)
         % equation is a even polynomial
         % for system to be marginally stable no sign change should happen
         disp(col1)
@@ -169,19 +169,6 @@ if (unstable_independent == 0)
         S.K
         S.parameters
         disp('Equation is a even polynomial and system is marginally stable for K=x :')
-        pretty(S.conditions)
-    end
-
-    %ROW 4 ZERO
-    if (flag_row4_zero==1)
-        % Second order even polynomial is a factor
-        % for system to be marginally stable no sign change should happen
-        disp(col1)
-        eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
-        S = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
-        S.K
-        S.parameters
-        disp('Second order even polynomial is a factor and System is marginally stable for K=x :')
         pretty(S.conditions)
     end
     
