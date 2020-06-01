@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>script</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-05-31"><meta name="DC.source" content="script.m"><style type="text/css">
+      --><title>script</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-06-01"><meta name="DC.source" content="script.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -200,8 +200,8 @@ unstable_independent = 0;
 <span class="keyword">end</span>
 </pre><h2 id="10">Values of K for marginally stable system</h2><pre class="codeinput"><span class="keyword">if</span> (unstable_independent == 0)
 
-    <span class="comment">% ROW 2 ZERO</span>
-    <span class="keyword">if</span> (flag_row2_zero==1)
+    <span class="comment">% ROW 2 or ROW 4 ZERO</span>
+    <span class="keyword">if</span> (flag_row2_zero==1 || flag_row4_zero==1)
         <span class="comment">% equation is a even polynomial</span>
         <span class="comment">% for system to be marginally stable no sign change should happen</span>
         disp(col1)
@@ -213,35 +213,22 @@ unstable_independent = 0;
         pretty(S.conditions)
     <span class="keyword">end</span>
 
-    <span class="comment">%ROW 4 ZERO</span>
-    <span class="keyword">if</span> (flag_row4_zero==1)
-        <span class="comment">% Second order even polynomial is a factor</span>
-        <span class="comment">% for system to be marginally stable no sign change should happen</span>
-        disp(col1)
-        eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
-        S = solve(eqns,K,<span class="string">'ReturnConditions'</span>,true,<span class="string">'IgnoreAnalyticConstraints'</span>,true);
-        S.K
-        S.parameters
-        disp(<span class="string">'Second order even polynomial is a factor and System is marginally stable for K=x :'</span>)
-        pretty(S.conditions)
-    <span class="keyword">end</span>
-
 <span class="keyword">end</span>
 </pre><pre class="codeoutput">[ 1, 4, 1/2, 2 - 8*K, K]
  
  
 ans =
  
-y
+x
  
  
 ans =
  
-y
+x
  
 Equation is a even polynomial and system is marginally stable for K=x :
               1
-0 &lt; y and y &lt; -
+0 &lt; x and x &lt; -
               4
 
 </pre><h2 id="11">Find conditions on K for system to be stable.</h2><pre class="codeinput"><span class="keyword">if</span> (unstable_independent == 0)
@@ -417,8 +404,8 @@ end
 %% Values of K for marginally stable system
 if (unstable_independent == 0)
    
-    % ROW 2 ZERO
-    if (flag_row2_zero==1)
+    % ROW 2 or ROW 4 ZERO
+    if (flag_row2_zero==1 || flag_row4_zero==1)
         % equation is a even polynomial
         % for system to be marginally stable no sign change should happen
         disp(col1)
@@ -427,19 +414,6 @@ if (unstable_independent == 0)
         S.K
         S.parameters
         disp('Equation is a even polynomial and system is marginally stable for K=x :')
-        pretty(S.conditions)
-    end
-
-    %ROW 4 ZERO
-    if (flag_row4_zero==1)
-        % Second order even polynomial is a factor
-        % for system to be marginally stable no sign change should happen
-        disp(col1)
-        eqns = [sign(col1(3)) == sign(col1(4)) sign(col1(4)) == sign(col1(5))];
-        S = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
-        S.K
-        S.parameters
-        disp('Second order even polynomial is a factor and System is marginally stable for K=x :')
         pretty(S.conditions)
     end
     
