@@ -43,10 +43,10 @@ assume(K,{'real', 'positive'})
 
 %% Debug values
 a=1;
-b=0;
-c=1;
-d=0;
-e=0;
+b=1;
+c=3;
+d=1;
+e=1;
 
 
 %% ROW 2
@@ -168,7 +168,7 @@ if (unstable_independent == 0)
         S = solve(eqns,K,'ReturnConditions',true,'IgnoreAnalyticConstraints',true);
         S.K
         S.parameters
-        disp('Equation is a even polynomial and system is marginally stable for K=x :')
+        disp('Equation is a even polynomial and system is marginally stable for K=:')
         pretty(S.conditions)
     end
     
